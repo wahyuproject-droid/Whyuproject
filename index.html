@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHYBUG V7 Premium</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+    /* Background Video */
+    #bg-video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    /* Overlay gradient biar gak silau */
+    #overlay {
+      position: fixed;
+      top:0;left:0;
+      width:100%;height:100%;
+      background: linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.85));
+      z-index: -1;
+    }
+
+    body {
+      color: #fff;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* Header */
+    .header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 14px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #d46cff;
+      text-shadow: 0 0 20px #d46cff, 0 0 40px #9d4dff;
+      background: rgba(20,0,40,0.55);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 25px rgba(212,108,255,0.6);
+      z-index: 10;
+    }
+
+    /* Pages */
+    .page {
+      display: none;
+      margin-top: 80px;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      text-align: center;
+      animation: fadeSlide 0.6s ease;
+    }
+    .page.active {display: block;}
+    @keyframes fadeSlide {
+      from {opacity:0;transform:translateY(50px);}
+      to {opacity:1;transform:translateY(0);}
+    }
+
+    /* Card Profile */
+    .card {
+      background: rgba(58,0,87,0.75);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 0 30px rgba(212,108,255,0.5), inset 0 0 12px rgba(255,255,255,0.05);
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+    .profile {width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid #d46cff;margin:0 auto 15px;box-shadow:0 0 20px rgba(212,108,255,0.9);}
+    .profile img{width:100%;height:100%;object-fit:cover;}
+
+    /* Forms */
+    .form {margin-top:20px;text-align:left;}
+    .form label {font-size:0.9rem;color:#d46cff;}
+    .form input,.form select{
+      width:100%;padding:12px;margin:8px 0;
+      background:rgba(255,255,255,0.08);border:none;border-radius:12px;
+      color:#fff;font-size:0.9rem;
+      box-shadow:0 0 14px rgba(212,108,255,0.2);
+      transition:0.3s;
+    }
+    .form input:focus,.form select:focus{
+      background:rgba(212,108,255,0.2);
+      box-shadow:0 0 18px #d46cff;
+    }
+    .btn {
+      width:100%;padding:14px;margin-top:12px;
+      background:linear-gradient(90deg,#d46cff,#7a00ff);
+      border:none;border-radius:14px;
+      font-size:1rem;font-weight:600;
+      color:white;cursor:pointer;
+      box-shadow:0 0 25px rgba(212,108,255,0.7);
+      transition:0.3s;
+    }
+    .btn:hover {transform:scale(1.07);}
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 70px;
+      background: rgba(20,0,40,0.6);
+      display: flex; justify-content: space-around; align-items: center;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 -2px 20px rgba(0,0,0,0.6);
+    }
+    .nav-item {text-align:center;flex:1;color:#aaa;cursor:pointer;transition:0.3s;}
+    .nav-item i{font-size:1.6rem;display:block;}
+    .nav-item.active{color:#d46cff;text-shadow:0 0 15px #d46cff;}
+    .nav-item span{font-size:.75rem;opacity:0;transition:.3s;}
+    .nav-item.active span{opacity:1;}
+
+    /* Popup success */
+    .popup {
+      position: fixed;top:50%;left:50%;
+      transform:translate(-50%,-50%) scale(0.7);
+      background:rgba(30,0,50,0.95);
+      padding:20px 30px;border-radius:16px;
+      text-align:center;
+      box-shadow:0 0 25px rgba(212,108,255,0.9);
+      font-size:1rem;color:#fff;
+      display:none;z-index:2000;
+    }
+    .popup.show {display:block;animation:popUp .4s ease forwards;}
+    @keyframes popUp {from{opacity:0;transform:translate(-50%,-50%) scale(0.5);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Background -->
+  <video autoplay muted loop id="bg-video">
+    <source src="pp.mp4" type="video/mp4">
+  </video>
+  <div id="overlay"></div>
+
+  <!-- Header -->
+  <div class="header">WHYBUG V7 PREMIUM</div>
+
+  <!-- Home -->
+  <div class="page active" id="home">
+    <div class="card">
+      <div class="profile"><img src="indpk.jpg" alt="Profile"></div>
+      <h2>Welcome, PREMIUM USER</h2>
+      <p>OWNER & CREATOR</p>
+      <p>ACCESS: LIFETIME</p>
+    </div>
+  </div>
+
+  <!-- Bug Tools -->
+  <div class="page" id="bug">
+    <h2>FITUR BUG</h2>
+    <form class="form" onsubmit="return send('Bug')">
+      <label>Target Number</label>
+      <input type="text" placeholder="Masukin nomor target">
+      <label>Pilih Bug</label>
+      <select>
+        <option>Crash Android</option>
+        <option>Freeze WA</option>
+        <option>Spam Notif</option>
+        <option>Lag Device</option>
+        <option>Media Corrupt</option>
+        <option>Force Logout</option>
+        <option>App Crash</option>
+        <option>System Overload</option>
+      </select>
+      <button type="submit" class="btn">⚡ SEND BUG</button>
+    </form>
+  </div>
+
+  <!-- Attack Tools -->
+  <div class="page" id="attack">
+    <h2>🚀 ATTACK TOOLS</h2>
+    <form class="form" onsubmit="return send('Attack')">
+      <label>Target (IP/Number)</label>
+      <input type="text" placeholder="Masukin target...">
+      <label>Pilih Attack</label>
+      <select>
+        <option>SMS Bomb</option>
+        <option>Email Flood</option>
+        <option>DDoS Simulation</option>
+        <option>Fake Call</option>
+        <option>Ping Flood</option>
+        <option>CPU Stress Test</option>
+        <option>VPN Crash</option>
+        <option>Firewall Bypass</option>
+      </select>
+      <button type="submit" class="btn">🔥 START ATTACK</button>
+    </form>
+  </div>
+
+  <!-- Extra Tools -->
+  <div class="page" id="tools">
+    <h2>🛠 EXTRA TOOLS</h2>
+    <div class="card">
+      <p>✔ Fake Identity Generator</p>
+      <p>✔ Temp Mail</p>
+      <p>✔ Encrypt / Decrypt</p>
+      <p>✔ Device Info Checker</p>
+      <p>✔ QR Code Maker</p>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="page" id="settings">
+    <h2>⚙ SETTINGS</h2>
+    <form class="form">
+      <label>Theme</label>
+      <select>
+        <option>Dark Neon</option>
+        <option>Cyberpunk</option>
+        <option>Matrix Green</option>
+      </select>
+      <button type="button" class="btn">💾 Save</button>
+    </form>
+  </div>
+
+  <!-- Popup -->
+  <div id="popup" class="popup">Action Success!</div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="showPage('home', this)"><i class="fa fa-home"></i><span>Home</span></div>
+    <div class="nav-item" onclick="showPage('bug', this)"><i class="fa fa-bug"></i><span>Bug</span></div>
+    <div class="nav-item" onclick="showPage('attack', this)"><i class="fa fa-bolt"></i><span>Attack</span></div>
+    <div class="nav-item" onclick="showPage('tools', this)"><i class="fa fa-toolbox"></i><span>Tools</span></div>
+    <div class="nav-item" onclick="showPage('settings', this)"><i class="fa fa-cog"></i><span>Settings</span></div>
+  </div>
+
+  <script>
+    function showPage(id, el){
+      document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+      el.classList.add("active");
+    }
+    function send(type){
+      let popup=document.getElementById("popup");
+      popup.innerText= type+" Success!";
+      popup.classList.add("show");
+      setTimeout(()=>popup.classList.remove("show"),2000);
+      return false; // biar gak reload
+    }
+  </script>
+</body>
+</html>
