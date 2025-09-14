@@ -1,232 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WHYBUG V7 Premium</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    #bg-video{position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:-2;filter:brightness(0.78);}
+    #overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.85));z-index:-1;}
+    body{color:#fff;height:100vh;width:100vw;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
 
-    /* Background Video */
-    #bg-video {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      object-fit: cover;
-      z-index: -2;
-    }
+    .header{position:fixed;top:0;left:0;width:100%;padding:14px;text-align:center;font-weight:700;font-size:1.4rem;
+      background:rgba(20,0,40,0.55);backdrop-filter:blur(6px);box-shadow:0 0 25px rgba(212,108,255,0.6);z-index:10;
+      background-clip:text;-webkit-background-clip:text;color:transparent;
+      background-image:linear-gradient(90deg,#d46cff,#7a00ff,#00ffe7,#d46cff);background-size:300% 300%;
+      animation:glowText 6s linear infinite;text-shadow:0 0 25px rgba(212,108,255,0.9);}
+    @keyframes glowText{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-    /* Overlay gradient biar gak silau */
-    #overlay {
-      position: fixed;
-      top:0;left:0;
-      width:100%;height:100%;
-      background: linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.85));
-      z-index: -1;
-    }
+    .page{display:none;margin-top:80px;width:100%;max-width:480px;padding:20px;text-align:center;animation:fadeSlide .6s ease;}
+    .page.active{display:block;animation:pageIn .5s ease;}
+    @keyframes fadeSlide{from{opacity:0;transform:translateY(50px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes pageIn{from{opacity:0;transform:scale(0.98);}to{opacity:1;transform:scale(1);}}
 
-    body {
-      color: #fff;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-    }
+    .card{background:rgba(58,0,87,0.75);border-radius:18px;padding:25px;box-shadow:0 0 25px rgba(212,108,255,0.6),inset 0 0 12px rgba(255,255,255,0.03);
+      animation:float 4s ease-in-out infinite,neonPulse 3s infinite;}
+    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+    @keyframes neonPulse{0%,100%{box-shadow:0 0 25px rgba(212,108,255,0.6);}50%{box-shadow:0 0 40px rgba(212,108,255,1);}}
 
-    /* Header */
-    .header {
-      position: fixed; top: 0; left: 0; width: 100%;
-      padding: 14px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: #d46cff;
-      text-shadow: 0 0 20px #d46cff, 0 0 40px #9d4dff;
-      background: rgba(20,0,40,0.55);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 0 25px rgba(212,108,255,0.6);
-      z-index: 10;
-    }
-
-    /* Pages */
-    .page {
-      display: none;
-      margin-top: 80px;
-      width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      text-align: center;
-      animation: fadeSlide 0.6s ease;
-    }
-    .page.active {display: block;}
-    @keyframes fadeSlide {
-      from {opacity:0;transform:translateY(50px);}
-      to {opacity:1;transform:translateY(0);}
-    }
-
-    /* Card Profile */
-    .card {
-      background: rgba(58,0,87,0.75);
-      border-radius: 18px;
-      padding: 25px;
-      box-shadow: 0 0 30px rgba(212,108,255,0.5), inset 0 0 12px rgba(255,255,255,0.05);
-      animation: float 4s ease-in-out infinite;
-    }
-    @keyframes float {0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-    .profile {width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid #d46cff;margin:0 auto 15px;box-shadow:0 0 20px rgba(212,108,255,0.9);}
+    .profile{width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid #d46cff;margin:0 auto 15px;
+      box-shadow:0 0 25px rgba(212,108,255,0.9);}
     .profile img{width:100%;height:100%;object-fit:cover;}
 
-    /* Forms */
-    .form {margin-top:20px;text-align:left;}
-    .form label {font-size:0.9rem;color:#d46cff;}
-    .form input,.form select{
-      width:100%;padding:12px;margin:8px 0;
-      background:rgba(255,255,255,0.08);border:none;border-radius:12px;
-      color:#fff;font-size:0.9rem;
-      box-shadow:0 0 14px rgba(212,108,255,0.2);
-      transition:0.3s;
-    }
-    .form input:focus,.form select:focus{
-      background:rgba(212,108,255,0.2);
-      box-shadow:0 0 18px #d46cff;
-    }
-    .btn {
-      width:100%;padding:14px;margin-top:12px;
-      background:linear-gradient(90deg,#d46cff,#7a00ff);
-      border:none;border-radius:14px;
-      font-size:1rem;font-weight:600;
-      color:white;cursor:pointer;
-      box-shadow:0 0 25px rgba(212,108,255,0.7);
-      transition:0.3s;
-    }
-    .btn:hover {transform:scale(1.07);}
+    .form{margin-top:18px;text-align:left;}
+    .form label{font-size:0.9rem;color:#d46cff;}
+    .form input,.form select{width:100%;padding:12px;margin:8px 0;background:rgba(255,255,255,0.08);border:none;border-radius:12px;
+      color:#fff;font-size:0.9rem;box-shadow:0 0 14px rgba(212,108,255,0.12);transition:0.24s;}
+    .form input:focus,.form select:focus{background:rgba(212,108,255,0.14);box-shadow:0 0 20px #d46cff;outline:none;}
 
-    /* Bottom Nav */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 70px;
-      background: rgba(20,0,40,0.6);
-      display: flex; justify-content: space-around; align-items: center;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 -2px 20px rgba(0,0,0,0.6);
-    }
-    .nav-item {text-align:center;flex:1;color:#aaa;cursor:pointer;transition:0.3s;}
-    .nav-item i{font-size:1.6rem;display:block;}
-    .nav-item.active{color:#d46cff;text-shadow:0 0 15px #d46cff;}
+    .btn{width:100%;padding:14px;margin-top:12px;border:none;border-radius:14px;font-size:1rem;font-weight:600;color:white;cursor:pointer;
+      background:linear-gradient(270deg,#d46cff,#7a00ff,#00ffe7,#d46cff);background-size:400% 400%;animation:gradientMove 8s ease infinite;
+      box-shadow:0 0 25px rgba(212,108,255,0.7);transition:.18s;}
+    .btn:hover{transform:scale(1.04);}
+    @keyframes gradientMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+
+    .bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:70px;background:rgba(20,0,40,0.6);
+      display:flex;justify-content:space-around;align-items:center;backdrop-filter:blur(6px);box-shadow:0 -2px 20px rgba(0,0,0,0.6);}
+    .nav-item{text-align:center;flex:1;color:#aaa;cursor:pointer;transition:.3s;}
+    .nav-item i{font-size:1.6rem;display:block;transition:.28s;}
+    .nav-item.active{color:#d46cff;text-shadow:0 0 20px #d46cff;}
+    .nav-item.active i{animation:bounce .8s;}
     .nav-item span{font-size:.75rem;opacity:0;transition:.3s;}
     .nav-item.active span{opacity:1;}
+    @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 
-    /* Popup success */
-    .popup {
-      position: fixed;top:50%;left:50%;
-      transform:translate(-50%,-50%) scale(0.7);
-      background:rgba(30,0,50,0.95);
-      padding:20px 30px;border-radius:16px;
-      text-align:center;
-      box-shadow:0 0 25px rgba(212,108,255,0.9);
-      font-size:1rem;color:#fff;
-      display:none;z-index:2000;
-    }
-    .popup.show {display:block;animation:popUp .4s ease forwards;}
-    @keyframes popUp {from{opacity:0;transform:translate(-50%,-50%) scale(0.5);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+    /* Popup */
+    .popup{position:fixed;top:20%;left:50%;transform:translateX(-50%) scale(0.9);background:rgba(20,0,40,0.95);
+      padding:22px;border-radius:16px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.6);
+      color:#fff;display:none;z-index:2000;min-width:260px;}
+    .popup.show{display:block;animation:popUp .4s cubic-bezier(.2,.9,.3,1) forwards;}
+    @keyframes popUp{from{opacity:0;transform:translateX(-50%) scale(.7);}to{opacity:1;transform:translateX(-50%) scale(1);}}
+
+    .checkmark{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      margin:0 auto 12px;background:radial-gradient(circle,#7a00ff 0%,#d46cff 70%);box-shadow:0 0 25px #d46cff,inset 0 0 15px #fff3;
+      animation:pulse 1.6s infinite;}
+    .checkmark i{font-size:2.6rem;color:white;animation:bounceIn .5s ease;}
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+    @keyframes bounceIn{0%{transform:scale(0);}80%{transform:scale(1.2);}100%{transform:scale(1);}}
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-  <!-- Background -->
-  <video autoplay muted loop id="bg-video">
-    <source src="pp.mp4" type="video/mp4">
-  </video>
+  <video autoplay muted loop id="bg-video"><source src="pp.mp4" type="video/mp4"></video>
   <div id="overlay"></div>
-
-  <!-- Header -->
-  <div class="header">WHYBUG V7 PREMIUM</div>
+  <div class="header">WHYBUG V7</div>
 
   <!-- Home -->
   <div class="page active" id="home">
     <div class="card">
       <div class="profile"><img src="indpk.jpg" alt="Profile"></div>
-      <h2>Welcome, PREMIUM USER</h2>
-      <p>OWNER & CREATOR</p>
-      <p>ACCESS: LIFETIME</p>
+      <h2>Welcome, <span style="color:#d46cff">PREMIUM USER</span></h2>
+      <p class="note">TUTOR GANAZ KAH DEK</p>
     </div>
   </div>
 
-  <!-- Bug Tools -->
+  <!-- Bug -->
   <div class="page" id="bug">
     <h2>FITUR BUG</h2>
     <form class="form" onsubmit="return send('Bug')">
-      <label>Target Number</label>
-      <input type="text" placeholder="Masukin nomor target">
-      <label>Pilih Bug</label>
-      <select>
-        <option>Crash Android</option>
-        <option>Freeze WA</option>
-        <option>Spam Notif</option>
-        <option>Lag Device</option>
-        <option>Media Corrupt</option>
-        <option>Force Logout</option>
-        <option>App Crash</option>
-        <option>System Overload</option>
+      <label for="bug-target">TARGET NUMBER</label>
+      <input id="bug-target" type="text" placeholder="Masukin nomor target " inputmode="tel"/>
+      <label for="bug-type">Pilih Bug</label>
+      <select id="bug-type">
+        <option>🌀 Quantum Crash</option>
+        <option>💀 Shadow Freeze</option>
+        <option>⚡ Electro Spam</option>
+        <option>🔥 Inferno Loop</option>
+        <option>🕷 Venom Inject</option>
+        <option>☠ Blackout Force</option>
+        <option>📡 Signal Jammer</option>
+        <option>💣 Core Overload</option>
+        <option>🌌 Void Breaker</option>
+        <option>🔮 Phantom Glitch</option>
       </select>
       <button type="submit" class="btn">⚡ SEND BUG</button>
     </form>
   </div>
 
-  <!-- Attack Tools -->
+  <!-- Attack -->
   <div class="page" id="attack">
-    <h2>🚀 ATTACK TOOLS</h2>
+    <h2>FITUR ATTACK</h2>
     <form class="form" onsubmit="return send('Attack')">
-      <label>Target (IP/Number)</label>
-      <input type="text" placeholder="Masukin target...">
-      <label>Pilih Attack</label>
-      <select>
-        <option>SMS Bomb</option>
-        <option>Email Flood</option>
-        <option>DDoS Simulation</option>
-        <option>Fake Call</option>
-        <option>Ping Flood</option>
-        <option>CPU Stress Test</option>
-        <option>VPN Crash</option>
-        <option>Firewall Bypass</option>
+      <label for="attack-target">Target (IP/Number)</label>
+      <input id="attack-target" type="text" placeholder="Masukin target..."/>
+      <label for="attack-type">Pilih Attack</label>
+      <select id="attack-type">
+        <option>⚔ Hydra Flood</option>
+        <option>💥 Nova Blast</option>
+        <option>🌪 Storm Surge</option>
+        <option>🧨 Chaos Bomb</option>
+        <option>🔓 Firewall Breach</option>
+        <option>🎭 Mirage Attack</option>
+        <option>🌑 Eclipse Strike</option>
+        <option>🕶 Stealth Injection</option>
+        <option>⚡ Thunder Spike</option>
+        <option>💫 Warp Distortion</option>
       </select>
       <button type="submit" class="btn">🔥 START ATTACK</button>
     </form>
   </div>
 
-  <!-- Extra Tools -->
+  <!-- Tools -->
   <div class="page" id="tools">
-    <h2>🛠 EXTRA TOOLS</h2>
-    <div class="card">
-      <p>✔ Fake Identity Generator</p>
-      <p>✔ Temp Mail</p>
-      <p>✔ Encrypt / Decrypt</p>
-      <p>✔ Device Info Checker</p>
-      <p>✔ QR Code Maker</p>
-    </div>
+    <h2>🛠 TOOLS</h2>
+    <div class="card"><p>🚧 Coming Soon…</p></div>
   </div>
 
   <!-- Settings -->
   <div class="page" id="settings">
     <h2>⚙ SETTINGS</h2>
-    <form class="form">
-      <label>Theme</label>
-      <select>
-        <option>Dark Neon</option>
-        <option>Cyberpunk</option>
-        <option>Matrix Green</option>
-      </select>
-      <button type="button" class="btn">💾 Save</button>
-    </form>
+    <div class="card"><p>🚧 Coming Soon…</p></div>
   </div>
 
   <!-- Popup -->
-  <div id="popup" class="popup">Action Success!</div>
+  <div id="popup" class="popup" role="status" aria-live="polite"></div>
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
@@ -238,19 +155,37 @@
   </div>
 
   <script>
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"'`=\/]/g, s=>{
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[s];
+      });
+    }
     function showPage(id, el){
-      document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-      document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-      el.classList.add("active");
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      el.classList.add('active');
+    }
+    function showPopup(message, duration=3000){
+      const popup=document.getElementById('popup');
+      popup.innerHTML=`<div class="checkmark"><i class="fa fa-check"></i></div><div>${message}</div>`;
+      popup.classList.add('show');
+      clearTimeout(popup._t);
+      popup._t=setTimeout(()=>popup.classList.remove('show'),duration);
     }
     function send(type){
-      let popup=document.getElementById("popup");
-      popup.innerText= type+" Success!";
-      popup.classList.add("show");
-      setTimeout(()=>popup.classList.remove("show"),2000);
-      return false; // biar gak reload
+      event.preventDefault && event.preventDefault();
+      let targetElId=type==='Bug'?'bug-target':'attack-target';
+      let typeSelectId=type==='Bug'?'bug-type':'attack-type';
+      const target=document.getElementById(targetElId)?.value?.trim()||'';
+      const actionName=document.getElementById(typeSelectId)?.value||type;
+      if(!target){showPopup('Isi target terlebih dahulu!');return false;}
+      const safeTarget=escapeHtml(target);
+      const safeAction=escapeHtml(actionName);
+      const msg=`BERHASIL ${escapeHtml(type).toUpperCase()} TERKIRIM KE NOMOR ${safeTarget} (${safeAction})`;
+      showPopup(msg,3800);
+      return false;
     }
   </script>
 </body>
-</html>
+        </html>
